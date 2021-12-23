@@ -47,6 +47,15 @@ class MainFragment : Fragment() {
         pager = view?.findViewById(R.id.pager)
         pager?.adapter = adapter
 
+        pager?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+
+                adapter.setCurrentVideoPosition(position)
+                Log.e("","")
+            }
+        })
+
         viewModel.loadSomeVideoList()
 
         Log.e("", "")
