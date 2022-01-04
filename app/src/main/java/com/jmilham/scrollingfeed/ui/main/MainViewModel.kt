@@ -21,7 +21,7 @@ class MainViewModel : ViewModel() {
 
         // a list of channels
         val request: Request = Request.Builder()
-            .url("https://cdn.jwplayer.com/v2/playlists/LC6i0PaU")
+            .url("https://cdn.jwplayer.com/v2/playlists/zAdW5unD")
             .get()
             .addHeader("Accept", "application/json; charset=utf-8")
             .build()
