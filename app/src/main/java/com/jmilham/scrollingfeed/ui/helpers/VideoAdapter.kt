@@ -1,6 +1,5 @@
 package com.jmilham.scrollingfeed.ui.helpers
 
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import com.jwplayer.pub.api.configuration.PlayerConfig
 import com.jwplayer.pub.api.configuration.UiConfig
 import com.jwplayer.pub.view.JWPlayerView
 import java.util.*
-import java.util.logging.Handler
 
 class VideoAdapter(private var dataSet: ArrayList<JwVideo>) :
     RecyclerView.Adapter<VideoAdapter.ViewHolder>() {
@@ -40,20 +38,38 @@ class VideoAdapter(private var dataSet: ArrayList<JwVideo>) :
                 if (jwPlayer != null) {
                     if (jwPlayer!!.state == PlayerState.PLAYING) {
                         jwPlayer?.pause()
-                        play_pause.setImageDrawable(ContextCompat.getDrawable(view.context, R.drawable.icon_play))
                     } else if (jwPlayer!!.state == PlayerState.PAUSED) {
                         jwPlayer?.play()
-                        play_pause.setImageDrawable(ContextCompat.getDrawable(view.context, R.drawable.icon_pause))
                     }
 
-                    play_pause.visibility = View.VISIBLE // force show it and in .5 seconds it'll hide or stay
+                    setIsPlayingIcon()
+                    play_pause.visibility =
+                        View.VISIBLE // force show it and in .5 seconds it'll hide or stay
 
                     startIconTimeout()
                 }
             }
         }
 
-        private fun startIconTimeout() {
+        fun setIsPlayingIcon() {
+            if (jwPlayer?.state == PlayerState.PLAYING) {
+                play_pause.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        jwPlayerView.context,
+                        R.drawable.icon_play
+                    )
+                )
+            } else if (jwPlayer?.state == PlayerState.PAUSED) {
+                play_pause.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        jwPlayerView.context,
+                        R.drawable.icon_pause
+                    )
+                )
+            }
+        }
+
+        fun startIconTimeout() {
             // after .5 seconds hide the icon if playing
             this.parent.postDelayed({
                 if (jwPlayer != null) {
