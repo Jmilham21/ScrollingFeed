@@ -33,8 +33,6 @@ class VideoAdapter(private var dataSet: ArrayList<JwVideo>) :
 
         init {
             parent.setOnClickListener {
-                // TODO: set up logic to hide / display any part of ui
-                // play pause?
                 if (jwPlayer != null) {
                     if (jwPlayer!!.state == PlayerState.PLAYING) {
                         jwPlayer?.pause()
@@ -92,7 +90,6 @@ class VideoAdapter(private var dataSet: ArrayList<JwVideo>) :
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    // todo: could set something up to show the image when player is setting up after initial load. would help for recycled items
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         if (viewHolder.jwPlayer != null) {
 //            viewHolder.jwPlayer!!.play()
@@ -102,6 +99,7 @@ class VideoAdapter(private var dataSet: ArrayList<JwVideo>) :
             val config: PlayerConfig = PlayerConfig.Builder()
                 .file("https://cdn.jwplayer.com/manifests/${dataSet[position].mediaid}.m3u8")
                 .image("https://cdn.jwplayer.com/v2/media/${dataSet[position].mediaid}/poster.jpg")
+                .stretching(PlayerConfig.STRETCHING_UNIFORM) // allow the media to fill allotted space as best as possible
                 .uiConfig(allDisabledUiConfig)
                 .repeat(true)
                 .build()
