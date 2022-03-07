@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.jmilham.scrollingfeed.models.JwMedia
 import com.jmilham.scrollingfeed.models.JwVideo
 import okhttp3.*
 import org.json.JSONObject
@@ -12,7 +13,7 @@ import java.io.IOException
 class MainViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 
-    val liveVideos: MutableLiveData<ArrayList<JwVideo>> = MutableLiveData()
+    val liveVideos: MutableLiveData<ArrayList<JwMedia>> = MutableLiveData()
 
     fun loadSomeVideoList() {
         // TODO: Bring in some list of videos? Probably from playlists

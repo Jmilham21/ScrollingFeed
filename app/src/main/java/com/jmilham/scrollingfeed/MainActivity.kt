@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        LicenseUtil.setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY)
+        LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()

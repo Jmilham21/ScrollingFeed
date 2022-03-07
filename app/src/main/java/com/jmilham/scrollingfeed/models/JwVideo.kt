@@ -12,7 +12,7 @@ data class JwVideo(
     var description: String = "",
     var tags: String = "",
     var skip_to: String = "",
-) {
+) : JwMedia() {
     data class JwVideoImage(
         var src: String = "",
         var width: Int? = -1,
