@@ -1,6 +1,7 @@
 package com.jmilham.scrollingfeed.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.jmilham.scrollingfeed.R
 import com.jmilham.scrollingfeed.models.JwAdvertisement
 import com.jmilham.scrollingfeed.ui.helpers.VideoAdapter
+import com.jmilham.scrollingfeed.ui.helpers.VideoFragment
+import com.jmilham.scrollingfeed.ui.helpers.VideoFragmentAdapter
 
 class MainFragment : Fragment() {
 
@@ -19,7 +22,7 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var viewModel: MainViewModel
-    private var adapter: VideoAdapter = VideoAdapter(ArrayList())
+    private lateinit var adapter: VideoFragmentAdapter
     private var pager: ViewPager2? = null
 
     override fun onCreateView(
@@ -31,7 +34,7 @@ class MainFragment : Fragment() {
 
         viewModel.liveVideos.observe(viewLifecycleOwner) {
             it.add(it.size / 2, JwAdvertisement("https://playertest.longtailvideo.com/vast/preroll-jw.xml")) // add an ad to the middle for test
-            adapter = VideoAdapter(it)
+            adapter = VideoFragmentAdapter(this, it)
             pager?.adapter = adapter
             pager?.offscreenPageLimit = 4
             adapter.notifyDataSetChanged() // safe since only on fresh load
@@ -43,25 +46,25 @@ class MainFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         pager = view?.findViewById(R.id.pager)
-        pager?.adapter = adapter
+        pager?.adapter = VideoFragmentAdapter(this, ArrayList())
 
         pager?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                val count = (pager?.adapter as VideoAdapter).itemCount
-                for (i in 0..count) {
-                    // go through and pause all, just in case?
-                    if((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(i) is VideoAdapter.ViewHolder){
-                        ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(i) as VideoAdapter.ViewHolder).jwPlayer?.pause()
-                        ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(i) as VideoAdapter.ViewHolder).setIsPlayingIcon()
-                        ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(i) as VideoAdapter.ViewHolder).startIconTimeout()
-                        ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(i) as VideoAdapter.ViewHolder).jwPlayer?.pauseAd(true)
-
-                    }
-                }
-                // Hacky way to touch the currently visible view in a ViewPager2.
-                ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(position) as VideoAdapter.ViewHolder).jwPlayer?.play()
-                ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(position) as VideoAdapter.ViewHolder).jwPlayer?.pauseAd(false)
+//                val count = (pager?.adapter as VideoAdapter).itemCount
+//                for (i in 0..count) {
+//                    // go through and pause all, just in case?
+//                    if((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(i) is VideoAdapter.ViewHolder){
+//                        ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(i) as VideoAdapter.ViewHolder).jwPlayer?.pause()
+//                        ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(i) as VideoAdapter.ViewHolder).setIsPlayingIcon()
+//                        ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(i) as VideoAdapter.ViewHolder).startIconTimeout()
+//                        ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(i) as VideoAdapter.ViewHolder).jwPlayer?.pauseAd(true)
+//
+//                    }
+//                }
+//                // Hacky way to touch the currently visible view in a ViewPager2.
+//                ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(position) as VideoFragment).jwPlayer?.play()
+//                ((pager?.getChildAt(0) as RecyclerView).findViewHolderForAdapterPosition(position) as VideoAdapter.ViewHolder).jwPlayer?.pauseAd(false)
 
             }
         })
