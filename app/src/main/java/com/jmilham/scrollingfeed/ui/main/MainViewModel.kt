@@ -15,14 +15,13 @@ class MainViewModel : ViewModel() {
 
     val liveVideos: MutableLiveData<ArrayList<JwMedia>> = MutableLiveData()
 
-    fun loadSomeVideoList() {
-        // TODO: Bring in some list of videos? Probably from playlists
-
+    // Default is a mobile friendly playlist
+    fun loadSomeVideoList(playlistId: String = "zAdW5unD") {
         val client = OkHttpClient()
 
         // a list of channels
         val request: Request = Request.Builder()
-            .url("https://cdn.jwplayer.com/v2/playlists/zAdW5unD")
+            .url("https://cdn.jwplayer.com/v2/playlists/$playlistId")
             .get()
             .addHeader("Accept", "application/json; charset=utf-8")
             .build()
