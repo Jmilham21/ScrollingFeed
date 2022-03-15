@@ -134,8 +134,9 @@ class VideoFragment(
             object : AdvertisingEvents.OnAdErrorListener {
                 override fun onAdError(p0: AdErrorEvent?) {
                     if (p0?.message?.isNotEmpty() == true) {
-                        // TODO: handle in a more graceful way
                         videoFragmentAdapter.removeFragment(position)
+                        videoFragmentAdapter.setPagingEnabled(true)
+                        isAd = false // The add has been removed
                     }
                 }
 
@@ -145,10 +146,10 @@ class VideoFragment(
             EventType.AD_COMPLETE,
             object : AdvertisingEvents.OnAdCompleteListener {
                 override fun onAdComplete(p0: AdCompleteEvent?) {
-                    // TODO: handle in a more graceful way
                     Handler(Looper.getMainLooper()).postDelayed({
                         videoFragmentAdapter.removeFragment(position)
-
+                        videoFragmentAdapter.setPagingEnabled(true)
+                        isAd = false // The add has been removed
                     }, 200)
                 }
             })
@@ -157,14 +158,13 @@ class VideoFragment(
             EventType.AD_SKIPPED,
             object : AdvertisingEvents.OnAdSkippedListener {
                 override fun onAdSkipped(p0: AdSkippedEvent?) {
-                    // TODO: handle in a more graceful way
                     Handler(Looper.getMainLooper()).postDelayed({
                         videoFragmentAdapter.removeFragment(position)
-
+                        videoFragmentAdapter.setPagingEnabled(true)
+                        isAd = false // The add has been removed
                     }, 200)
                 }
             })
-
 
         val allDisabledUiConfig = UiConfig.Builder().hideAllControls().build()
         val config: PlayerConfig = PlayerConfig.Builder()
@@ -185,6 +185,8 @@ class VideoFragment(
         }
         jwPlayer?.play()
         jwPlayer?.pauseAd(false)
+
+        videoFragmentAdapter.setPagingEnabled(!isAd)
     }
 
     // can safely tell the screen is gone

@@ -44,9 +44,9 @@ class MainFragment : Fragment() {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
-    override fun onStart() {
-        super.onStart()
-        pager = view?.findViewById(R.id.pager)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        pager = view.findViewById(R.id.pager)
         pager?.adapter = VideoFragmentAdapter(this, ArrayList())
         viewModel.loadSomeVideoList()
     }
