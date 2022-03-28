@@ -27,8 +27,14 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        return inflater.inflate(R.layout.main_fragment, container, false)
+    }
 
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        pager = view.findViewById(R.id.pager)
+        adapter = VideoFragmentAdapter(this, ArrayList())
+        pager?.adapter = adapter
         viewModel.liveVideos.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 // bad playlistID or bad config
@@ -41,13 +47,6 @@ class MainFragment : Fragment() {
                 adapter.notifyDataSetChanged() // safe since only on fresh load
             }
         }
-        return inflater.inflate(R.layout.main_fragment, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        pager = view.findViewById(R.id.pager)
-        pager?.adapter = VideoFragmentAdapter(this, ArrayList())
         viewModel.loadSomeVideoList()
     }
 
@@ -56,5 +55,11 @@ class MainFragment : Fragment() {
         viewModel.loadSomeVideoList(playlistId)
     }
 
-
+    // taking this as a chance to dump all the views inside ViewPager2
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val size =  adapter.data.size
+        adapter.data = ArrayList()
+        adapter.notifyItemRangeRemoved(0,size)
+    }
 }
