@@ -53,17 +53,26 @@ class VideoFragment(
             inflater, R.layout.video_page, container, false
         )
 
-        if (jwPlayer == null) {
-            // setup
-            if (jwMedia is JwVideo) {
-                setupVideo()
-            } else if (jwMedia is JwAdvertisement) {
-                setupAdvertisement()
-            }
-        } else {
-            // this may or may not actually happen?
+        // setup
+        if (jwMedia is JwVideo) {
+            setupVideo()
+        } else if (jwMedia is JwAdvertisement) {
+            setupAdvertisement()
         }
+
         return binding.root
+    }
+
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        if(!menuVisible){ // will be true if the current fragment in view
+            jwPlayer?.pause()
+        }
+    }
+
+    override fun onDestroy() {
+        jwPlayer?.stop()
+        super.onDestroy()
     }
 
     // can do setup for player here
@@ -95,9 +104,10 @@ class VideoFragment(
         val allDisabledUiConfig = UiConfig.Builder().hideAllControls().build()
         val config: PlayerConfig = PlayerConfig.Builder()
             .file("https://cdn.jwplayer.com/manifests/${media.mediaid}.m3u8")
-            .image("https://cdn.jwplayer.com/v2/media/${media}/poster.jpg")
-            .stretching(PlayerConfig.STRETCHING_UNIFORM) // allow the media to fill allotted space as best as possible
-            .preload(true) // data hog and may be overkill
+            .image("https://cdn.jwplayer.com/v2/media/${media.mediaid}/poster.jpg")
+            .stretching(PlayerConfig.STRETCHING_FILL) // allow the media to fill allotted space as best as possible
+//            .preload(true) // data hog and may be overkill
+            .autostart(true)
             .uiConfig(allDisabledUiConfig)
             .repeat(true)
             .build()
@@ -226,14 +236,14 @@ class VideoFragment(
             binding.playPause.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
-                    R.drawable.icon_play
+                    R.drawable.ic_jw_play
                 )
             )
         } else if (jwPlayer?.state == PlayerState.PAUSED) {
             binding.playPause.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
-                    R.drawable.icon_pause
+                    R.drawable.ic_jw_pause
                 )
             )
         }
