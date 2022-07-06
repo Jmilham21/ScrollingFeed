@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.jmilham.scrollingfeed.R
 import com.jmilham.scrollingfeed.models.JwAdvertisement
 import com.jmilham.scrollingfeed.models.JwMedia
@@ -68,14 +67,14 @@ class VideoAdapter(private var dataSet: ArrayList<JwMedia>) :
                 play_pause.setImageDrawable(
                     ContextCompat.getDrawable(
                         jwPlayerView.context,
-                        R.drawable.icon_play
+                        R.drawable.ic_jw_play
                     )
                 )
             } else if (jwPlayer?.state == PlayerState.PAUSED) {
                 play_pause.setImageDrawable(
                     ContextCompat.getDrawable(
                         jwPlayerView.context,
-                        R.drawable.icon_pause
+                        R.drawable.ic_jw_play
                     )
                 )
             }
