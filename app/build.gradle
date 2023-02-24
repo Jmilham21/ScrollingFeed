@@ -42,7 +42,7 @@ android {
     }
 }
 
-ext.JWPlayerVersion = '4.6.0'
+ext.JWPlayerVersion = '4.10.1'
 
 dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.0'
