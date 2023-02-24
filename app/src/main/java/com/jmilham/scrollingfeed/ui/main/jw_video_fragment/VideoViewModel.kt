@@ -1,4 +1,4 @@
-package com.jmilham.scrollingfeed.ui.main.JwVideoFragment
+package com.jmilham.scrollingfeed.ui.main.jw_video_fragment
 
 import androidx.lifecycle.ViewModel
 

@@ -1,4 +1,4 @@
-package com.jmilham.scrollingfeed.ui.main.JwVideoFragment
+package com.jmilham.scrollingfeed.ui.main.jw_video_fragment
 
 import android.os.Bundle
 import android.os.Handler
@@ -65,7 +65,15 @@ class VideoFragment(
 
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)
-        if(!menuVisible){ // will be true if the current fragment in view
+        if (!menuVisible) {
+            // being used as a double check since the lifecycle observer can't be trusted due to multi frags
+            // loaded at once and the lifecycle events aren't a sure thing.
+            val position = jwPlayer?.position
+            if (position != null) {
+                if (position > .5){
+                    jwPlayer?.seek(0.0) // TODO this is causing hiccups but best way to force a start over?
+                }
+            }
             jwPlayer?.pause()
         }
     }
@@ -99,7 +107,7 @@ class VideoFragment(
     private fun setupVideo() {
         isAd = false
         val media = jwMedia as JwVideo
-        jwPlayer = binding.jwplayer.player
+        jwPlayer = binding.jwplayer.getPlayer(this)
         setupListeners()
         val allDisabledUiConfig = UiConfig.Builder().hideAllControls().build()
         val config: PlayerConfig = PlayerConfig.Builder()
@@ -119,7 +127,7 @@ class VideoFragment(
     private fun setupAdvertisement() {
         isAd = true
         val advertisement = jwMedia as JwAdvertisement
-        jwPlayer = binding.jwplayer.player
+        jwPlayer = binding.jwplayer.getPlayer(this)
         setupListeners()
         val adSchedule: MutableList<AdBreak> = ArrayList()
         val adBreak: AdBreak = AdBreak.Builder()
