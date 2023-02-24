@@ -1,11 +1,11 @@
 package com.jmilham.scrollingfeed.ui.helpers
 
-import android.view.MotionEvent
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.jmilham.scrollingfeed.R
 import com.jmilham.scrollingfeed.models.JwMedia
+import com.jmilham.scrollingfeed.ui.main.jw_video_fragment.VideoFragment
 
 
 class VideoFragmentAdapter(private val fragment: Fragment, var data: ArrayList<JwMedia>) :
@@ -31,7 +31,7 @@ class VideoFragmentAdapter(private val fragment: Fragment, var data: ArrayList<J
      */
     // TODO
     fun removeFragment(position: Int) {
-       // Stub
+        // Stub
 
     }
 

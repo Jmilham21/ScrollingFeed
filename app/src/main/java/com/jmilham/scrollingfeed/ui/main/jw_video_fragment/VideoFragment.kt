@@ -1,4 +1,4 @@
-package com.jmilham.scrollingfeed.ui.helpers
+package com.jmilham.scrollingfeed.ui.main.jw_video_fragment
 
 import android.os.Bundle
 import android.os.Handler
@@ -11,12 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2
 import com.jmilham.scrollingfeed.R
 import com.jmilham.scrollingfeed.databinding.VideoPageBinding
 import com.jmilham.scrollingfeed.models.JwAdvertisement
 import com.jmilham.scrollingfeed.models.JwMedia
 import com.jmilham.scrollingfeed.models.JwVideo
+import com.jmilham.scrollingfeed.ui.helpers.VideoFragmentAdapter
 import com.jwplayer.pub.api.JWPlayer
 import com.jwplayer.pub.api.PlayerState
 import com.jwplayer.pub.api.configuration.PlayerConfig
@@ -41,6 +41,8 @@ class VideoFragment(
     private var jwPlayer: JWPlayer? = null
     var isAd = false
 
+    val TAG = "VideoFragment"
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,17 +53,34 @@ class VideoFragment(
             inflater, R.layout.video_page, container, false
         )
 
-        if (jwPlayer == null) {
-            // setup
-            if (jwMedia is JwVideo) {
-                setupVideo()
-            } else if (jwMedia is JwAdvertisement) {
-                setupAdvertisement()
-            }
-        } else {
-            // this may or may not actually happen?
+        // setup
+        if (jwMedia is JwVideo) {
+            setupVideo()
+        } else if (jwMedia is JwAdvertisement) {
+            setupAdvertisement()
         }
+
         return binding.root
+    }
+
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        if (!menuVisible) {
+            // being used as a double check since the lifecycle observer can't be trusted due to multi frags
+            // loaded at once and the lifecycle events aren't a sure thing.
+            val position = jwPlayer?.position
+            if (position != null) {
+                if (position > .5){
+                    jwPlayer?.seek(0.0) // TODO this is causing hiccups but best way to force a start over?
+                }
+            }
+            jwPlayer?.pause()
+        }
+    }
+
+    override fun onDestroy() {
+        jwPlayer?.stop()
+        super.onDestroy()
     }
 
     // can do setup for player here
@@ -88,37 +107,28 @@ class VideoFragment(
     private fun setupVideo() {
         isAd = false
         val media = jwMedia as JwVideo
-        jwPlayer = binding.jwplayer.player
+        jwPlayer = binding.jwplayer.getPlayer(this)
+        setupListeners()
         val allDisabledUiConfig = UiConfig.Builder().hideAllControls().build()
         val config: PlayerConfig = PlayerConfig.Builder()
             .file("https://cdn.jwplayer.com/manifests/${media.mediaid}.m3u8")
-            .image("https://cdn.jwplayer.com/v2/media/${media}/poster.jpg")
-            .stretching(PlayerConfig.STRETCHING_UNIFORM) // allow the media to fill allotted space as best as possible
-            .preload(true) // data hog and may be overkill
+            .image("https://cdn.jwplayer.com/v2/media/${media.mediaid}/poster.jpg")
+            .stretching(PlayerConfig.STRETCHING_FILL) // allow the media to fill allotted space as best as possible
+//            .preload(true) // data hog and may be overkill
+            .autostart(true)
             .uiConfig(allDisabledUiConfig)
             .repeat(true)
             .build()
         jwPlayer?.setup(config)
         jwPlayer?.controls = false // fully disable the controls
         binding.textView.text = media.title
-
-        jwPlayer!!.addListener(
-            EventType.ERROR,
-            object : VideoPlayerEvents.OnErrorListener {
-                override fun onError(p0: ErrorEvent?) {
-                    if (p0?.message?.isNotEmpty() == true) {
-                        // there is an error message and should probably handle this
-                        Log.e(tag, p0.message)
-                    }
-                }
-            })
     }
 
     private fun setupAdvertisement() {
         isAd = true
         val advertisement = jwMedia as JwAdvertisement
-        jwPlayer = binding.jwplayer.player
-
+        jwPlayer = binding.jwplayer.getPlayer(this)
+        setupListeners()
         val adSchedule: MutableList<AdBreak> = ArrayList()
         val adBreak: AdBreak = AdBreak.Builder()
             .offset("pre")
@@ -128,6 +138,34 @@ class VideoFragment(
         val imaAdvertising: ImaAdvertisingConfig = ImaAdvertisingConfig.Builder()
             .schedule(adSchedule)
             .build()
+
+        val allDisabledUiConfig = UiConfig.Builder().hideAllControls().build()
+        val config: PlayerConfig = PlayerConfig.Builder()
+            .file("http://content.jwplatform.com/videos/nhYDGoyh-el5vTWpr.mp4") // TODO: how do i setup a config without a file / media and just do an ad?
+            .stretching(PlayerConfig.STRETCHING_UNIFORM) // allow the media to fill allotted space as best as possible
+            .advertisingConfig(imaAdvertising)
+            .uiConfig(allDisabledUiConfig)
+            .build()
+        jwPlayer?.setup(config)
+        jwPlayer?.controls = false // fully disable the controls
+    }
+
+    /***
+     * Attach all the necesssary listeners for the player at this point
+     *
+     * Requires the JwPlayer object to be non null
+     */
+    private fun setupListeners() {
+        jwPlayer!!.addListener(
+            EventType.ERROR,
+            object : VideoPlayerEvents.OnErrorListener {
+                override fun onError(p0: ErrorEvent?) {
+                    if (p0?.message?.isNotEmpty() == true) {
+                        // there is an error message and should probably handle this
+                        Log.e(TAG, p0.message)
+                    }
+                }
+            })
 
         jwPlayer!!.addListener(
             EventType.AD_ERROR,
@@ -165,16 +203,6 @@ class VideoFragment(
                     }, 200)
                 }
             })
-
-        val allDisabledUiConfig = UiConfig.Builder().hideAllControls().build()
-        val config: PlayerConfig = PlayerConfig.Builder()
-            .file("http://content.jwplatform.com/videos/nhYDGoyh-el5vTWpr.mp4") // TODO: how do i setup a config without a file / media and just do an ad?
-            .stretching(PlayerConfig.STRETCHING_UNIFORM) // allow the media to fill allotted space as best as possible
-            .advertisingConfig(imaAdvertising)
-            .uiConfig(allDisabledUiConfig)
-            .build()
-        jwPlayer?.setup(config)
-        jwPlayer?.controls = false // fully disable the controls
     }
 
     // can safely tell the screen is back
@@ -216,14 +244,14 @@ class VideoFragment(
             binding.playPause.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
-                    R.drawable.icon_play
+                    R.drawable.ic_jw_play
                 )
             )
         } else if (jwPlayer?.state == PlayerState.PAUSED) {
             binding.playPause.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
-                    R.drawable.icon_pause
+                    R.drawable.ic_jw_pause
                 )
             )
         }
