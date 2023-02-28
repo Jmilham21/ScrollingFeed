@@ -3,7 +3,7 @@ package com.jmilham21.scrollingfeed.view.adapters
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.jwplayer.jwtiktak.R
+import com.jmilham21.scrllingfeed.R
 import com.jmilham21.scrollingfeed.data.JwMedia
 import com.jmilham21.scrollingfeed.fragment.VideoFragment
 

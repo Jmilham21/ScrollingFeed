@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import com.jwplayer.jwtiktak.R
+import com.jmilham21.scrllingfeed.R
 import com.jmilham21.scrollingfeed.view.adapters.VideoFragmentAdapter
 
 class JwTikTakFragment(private val playlistId: String) : Fragment() {
