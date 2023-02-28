@@ -1,4 +1,4 @@
-package com.jmilham.scrollingfeed.models
+package com.jwplayer.jwtiktak.data
 
 data class JwVideo(
     var title: String = "",

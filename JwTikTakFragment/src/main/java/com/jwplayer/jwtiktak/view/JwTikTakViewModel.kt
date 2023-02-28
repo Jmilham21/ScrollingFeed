@@ -1,17 +1,17 @@
-package com.jmilham.scrollingfeed.ui.main
+package com.jwplayer.jwtiktak.view
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.jmilham.scrollingfeed.models.JwMedia
-import com.jmilham.scrollingfeed.models.JwVideo
+import com.jwplayer.jwtiktak.data.JwMedia
+import com.jwplayer.jwtiktak.data.JwVideo
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
-class MainViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class JwTikTakViewModel: ViewModel() {
+// TODO: Implement the ViewModel
 
     val liveVideos: MutableLiveData<ArrayList<JwMedia>> = MutableLiveData()
 

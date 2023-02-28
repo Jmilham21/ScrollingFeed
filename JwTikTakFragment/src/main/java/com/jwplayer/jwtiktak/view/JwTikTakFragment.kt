@@ -1,4 +1,4 @@
-package com.jmilham.scrollingfeed.ui.main
+package com.jwplayer.jwtiktak.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,16 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import com.jmilham.scrollingfeed.R
-import com.jmilham.scrollingfeed.ui.helpers.VideoFragmentAdapter
+import com.jwplayer.jwtiktak.R
+import com.jwplayer.jwtiktak.view.adapters.VideoFragmentAdapter
 
-class MainFragment : Fragment() {
+class JwTikTakFragment(private val playlistId: String) : Fragment() {
+
+    private var offScreenLimit = 2
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance(playlistId: String) = JwTikTakFragment(playlistId)
     }
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: JwTikTakViewModel
     private lateinit var adapter: VideoFragmentAdapter
     private var pager: ViewPager2? = null
 
@@ -26,14 +28,14 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        return inflater.inflate(R.layout.main_fragment, container, false)
+        viewModel = ViewModelProvider(this)[JwTikTakViewModel::class.java]
+        return inflater.inflate(R.layout.tik_tak, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         pager = view.findViewById(R.id.pager)
-        pager?.offscreenPageLimit = 2 // this is a danger number if higher (and sometimes even at 1)
+        pager?.offscreenPageLimit = offScreenLimit // this is a danger number if higher (and sometimes even at 1)
         // BE CAUTIOUS OF ABOVE AND THE AMOUNT OF DECODERS THE DEVICE FOR THE MIME TYPE.
         // there are two limitations for how large this should be: decoders and memory allocation
         viewModel.liveVideos.observe(viewLifecycleOwner) {
@@ -47,7 +49,7 @@ class MainFragment : Fragment() {
                 pager?.adapter = adapter
             }
         }
-        viewModel.loadSomeVideoList()
+        viewModel.loadSomeVideoList(playlistId)
         pager?.setPageTransformer(MarginPageTransformer(1))
     }
 

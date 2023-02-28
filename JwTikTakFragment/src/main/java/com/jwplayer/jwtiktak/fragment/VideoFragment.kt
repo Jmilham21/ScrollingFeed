@@ -1,4 +1,4 @@
-package com.jmilham.scrollingfeed.ui.main.jw_video_fragment
+package com.jwplayer.jwtiktak.fragment
 
 import android.os.Bundle
 import android.os.Handler
@@ -11,21 +11,19 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.jmilham.scrollingfeed.R
-import com.jmilham.scrollingfeed.databinding.VideoPageBinding
-import com.jmilham.scrollingfeed.models.JwAdvertisement
-import com.jmilham.scrollingfeed.models.JwMedia
-import com.jmilham.scrollingfeed.models.JwVideo
-import com.jmilham.scrollingfeed.ui.helpers.VideoFragmentAdapter
+import com.jwplayer.jwtiktak.R
+import com.jwplayer.jwtiktak.data.JwAdvertisement
+import com.jwplayer.jwtiktak.data.JwMedia
+import com.jwplayer.jwtiktak.data.JwVideo
+import com.jwplayer.jwtiktak.databinding.VideoPageBinding
+import com.jwplayer.jwtiktak.view.adapters.VideoFragmentAdapter
 import com.jwplayer.pub.api.JWPlayer
 import com.jwplayer.pub.api.PlayerState
 import com.jwplayer.pub.api.configuration.PlayerConfig
-import com.jwplayer.pub.api.configuration.UiConfig
-import com.jwplayer.pub.api.configuration.ads.ima.ImaAdvertisingConfig
 import com.jwplayer.pub.api.events.*
 import com.jwplayer.pub.api.events.listeners.AdvertisingEvents
-import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents
-import com.jwplayer.pub.api.media.ads.AdBreak
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents.*
+import com.squareup.picasso.Picasso
 
 
 class VideoFragment(
@@ -55,12 +53,18 @@ class VideoFragment(
 
         // setup
         if (jwMedia is JwVideo) {
+            loadThumbnail(jwMedia)
             setupVideo()
         } else if (jwMedia is JwAdvertisement) {
             setupAdvertisement()
         }
 
         return binding.root
+    }
+
+    private fun loadThumbnail(media: JwVideo) {
+        Picasso.get().load(media.image).fit().centerInside()
+            .into(binding.videoThumbnail)
     }
 
     override fun setMenuVisibility(menuVisible: Boolean) {
@@ -70,7 +74,7 @@ class VideoFragment(
             // loaded at once and the lifecycle events aren't a sure thing.
             val position = jwPlayer?.position
             if (position != null) {
-                if (position > .5){
+                if (position > .5) {
                     jwPlayer?.seek(0.0) // TODO this is causing hiccups but best way to force a start over?
                 }
             }
@@ -87,19 +91,21 @@ class VideoFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.setOnClickListener {
             if (jwPlayer != null) {
-                if (jwPlayer!!.state == PlayerState.PLAYING) {
-                    jwPlayer?.pause()
-                    jwPlayer?.pauseAd(true)
-                } else if (jwPlayer!!.state == PlayerState.PAUSED) {
-                    jwPlayer?.play()
-                    jwPlayer?.pauseAd(false)
+                if (binding.loadingIcon.visibility == View.INVISIBLE) {
+                    if (jwPlayer!!.state == PlayerState.PLAYING) {
+                        jwPlayer?.pause()
+                        jwPlayer?.pauseAd(true)
+                    } else if (jwPlayer!!.state == PlayerState.PAUSED) {
+                        jwPlayer?.play()
+                        jwPlayer?.pauseAd(false)
+                    }
+
+                    setIsPlayingIcon()
+                    binding.playPause.visibility =
+                        View.VISIBLE // force show it and in .5 seconds it'll hide or stay
+
+                    startIconTimeout()
                 }
-
-                setIsPlayingIcon()
-                binding.playPause.visibility =
-                    View.VISIBLE // force show it and in .5 seconds it'll hide or stay
-
-                startIconTimeout()
             }
         }
     }
@@ -109,16 +115,7 @@ class VideoFragment(
         val media = jwMedia as JwVideo
         jwPlayer = binding.jwplayer.getPlayer(this)
         setupListeners()
-        val allDisabledUiConfig = UiConfig.Builder().hideAllControls().build()
-        val config: PlayerConfig = PlayerConfig.Builder()
-            .file("https://cdn.jwplayer.com/manifests/${media.mediaid}.m3u8")
-            .image("https://cdn.jwplayer.com/v2/media/${media.mediaid}/poster.jpg")
-            .stretching(PlayerConfig.STRETCHING_FILL) // allow the media to fill allotted space as best as possible
-//            .preload(true) // data hog and may be overkill
-            .autostart(true)
-            .uiConfig(allDisabledUiConfig)
-            .repeat(true)
-            .build()
+        val config: PlayerConfig = viewModel.getPlayerConfig(jwMedia)
         jwPlayer?.setup(config)
         jwPlayer?.controls = false // fully disable the controls
         binding.textView.text = media.title
@@ -129,24 +126,8 @@ class VideoFragment(
         val advertisement = jwMedia as JwAdvertisement
         jwPlayer = binding.jwplayer.getPlayer(this)
         setupListeners()
-        val adSchedule: MutableList<AdBreak> = ArrayList()
-        val adBreak: AdBreak = AdBreak.Builder()
-            .offset("pre")
-            .tag(advertisement.adUrl)
-            .build()
-        adSchedule.add(adBreak)
-        val imaAdvertising: ImaAdvertisingConfig = ImaAdvertisingConfig.Builder()
-            .schedule(adSchedule)
-            .build()
-
-        val allDisabledUiConfig = UiConfig.Builder().hideAllControls().build()
-        val config: PlayerConfig = PlayerConfig.Builder()
-            .file("http://content.jwplatform.com/videos/nhYDGoyh-el5vTWpr.mp4") // TODO: how do i setup a config without a file / media and just do an ad?
-            .stretching(PlayerConfig.STRETCHING_UNIFORM) // allow the media to fill allotted space as best as possible
-            .advertisingConfig(imaAdvertising)
-            .uiConfig(allDisabledUiConfig)
-            .build()
-        jwPlayer?.setup(config)
+        val playerConfig = viewModel.getPlayerAdvertConfig(advertisement)
+        jwPlayer?.setup(playerConfig)
         jwPlayer?.controls = false // fully disable the controls
     }
 
@@ -156,9 +137,19 @@ class VideoFragment(
      * Requires the JwPlayer object to be non null
      */
     private fun setupListeners() {
+        jwPlayer!!.addListener(EventType.BUFFER, object : OnBufferListener {
+            override fun onBuffer(p0: BufferEvent?) {
+                if (p0?.bufferReason != BufferReason.COMPLETE) {
+                    binding.loadingIcon.visibility = View.VISIBLE
+                } else {
+                    binding.loadingIcon.visibility = View.INVISIBLE
+                }
+            }
+
+        })
         jwPlayer!!.addListener(
             EventType.ERROR,
-            object : VideoPlayerEvents.OnErrorListener {
+            object : OnErrorListener {
                 override fun onError(p0: ErrorEvent?) {
                     if (p0?.message?.isNotEmpty() == true) {
                         // there is an error message and should probably handle this
@@ -203,6 +194,43 @@ class VideoFragment(
                     }, 200)
                 }
             })
+
+        jwPlayer!!.addListener(EventType.READY, object : OnReadyListener {
+            override fun onReady(p0: ReadyEvent?) {
+            }
+        })
+
+        jwPlayer!!.addListener(EventType.SEEK, object : OnSeekListener {
+            override fun onSeek(p0: SeekEvent?) {
+                binding.videoThumbnail.visibility = View.VISIBLE
+                binding.loadingIcon.visibility = View.VISIBLE
+            }
+        })
+        // I also happen when the player starts a repeat!
+        jwPlayer!!.addListener(EventType.SEEKED, object : OnSeekedListener {
+            override fun onSeeked(p0: SeekedEvent?) {
+                binding.videoThumbnail.visibility = View.GONE
+            }
+        })
+
+        jwPlayer!!.addListener(EventType.PLAY, object : OnPlayListener {
+            override fun onPlay(p0: PlayEvent?) {
+                binding.videoThumbnail.visibility = View.GONE
+                binding.loadingIcon.visibility = View.INVISIBLE
+            }
+        })
+
+        jwPlayer!!.addListener(EventType.ERROR, object : OnErrorListener {
+            override fun onError(p0: ErrorEvent?) {
+                // TODO: Fragment is in a dead state, show a message or recover?
+            }
+
+        })
+        jwPlayer!!.addListener(EventType.SETUP_ERROR, object : OnSetupErrorListener {
+            override fun onSetupError(p0: SetupErrorEvent?) {
+                // TODO: Fragment is in a dead state, show a message or recover?
+            }
+        })
     }
 
     // can safely tell the screen is back

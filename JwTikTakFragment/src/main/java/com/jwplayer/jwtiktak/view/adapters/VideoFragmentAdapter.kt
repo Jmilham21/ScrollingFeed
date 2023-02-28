@@ -1,11 +1,11 @@
-package com.jmilham.scrollingfeed.ui.helpers
+package com.jwplayer.jwtiktak.view.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.jmilham.scrollingfeed.R
-import com.jmilham.scrollingfeed.models.JwMedia
-import com.jmilham.scrollingfeed.ui.main.jw_video_fragment.VideoFragment
+import com.jwplayer.jwtiktak.R
+import com.jwplayer.jwtiktak.data.JwMedia
+import com.jwplayer.jwtiktak.fragment.VideoFragment
 
 
 class VideoFragmentAdapter(private val fragment: Fragment, var data: ArrayList<JwMedia>) :
