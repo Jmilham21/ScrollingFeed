@@ -3,6 +3,19 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'maven-publish'
 }
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.jmilham21'
+            artifactId = 'ScrollingFeed'
+            version = "1.0.0"
+
+            pom {
+                description = 'A description of my library'
+            }
+        }
+    }
+}
 
 android {
     namespace 'com.jwplayer.jwtiktak'
