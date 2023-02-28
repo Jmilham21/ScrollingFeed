@@ -1,4 +1,4 @@
-package com.jmilham.scrollingfeed.ui.main.jw_video_fragment
+package com.jwplayer.jwtiktak.fragment
 
 import android.os.Bundle
 import android.os.Handler
@@ -11,12 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.jmilham.scrollingfeed.R
-import com.jmilham.scrollingfeed.databinding.VideoPageBinding
-import com.jmilham.scrollingfeed.models.JwAdvertisement
-import com.jmilham.scrollingfeed.models.JwMedia
-import com.jmilham.scrollingfeed.models.JwVideo
-import com.jmilham.scrollingfeed.ui.helpers.VideoFragmentAdapter
+import com.jwplayer.jwtiktak.R
+import com.jwplayer.jwtiktak.data.JwAdvertisement
+import com.jwplayer.jwtiktak.data.JwMedia
+import com.jwplayer.jwtiktak.data.JwVideo
+import com.jwplayer.jwtiktak.databinding.VideoPageBinding
+import com.jwplayer.jwtiktak.view.adapters.VideoFragmentAdapter
 import com.jwplayer.pub.api.JWPlayer
 import com.jwplayer.pub.api.PlayerState
 import com.jwplayer.pub.api.configuration.PlayerConfig
@@ -63,7 +63,8 @@ class VideoFragment(
     }
 
     private fun loadThumbnail(media: JwVideo) {
-        Picasso.get().load(media.image).fit().into(binding.videoThumbnail)
+        Picasso.get().load(media.image).fit().centerInside()
+            .into(binding.videoThumbnail)
     }
 
     override fun setMenuVisibility(menuVisible: Boolean) {

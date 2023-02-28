@@ -11,3 +11,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ScrollingFeed"
 include ':app'
+include ':JwTikTakFragment'

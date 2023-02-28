@@ -1,8 +1,8 @@
-package com.jmilham.scrollingfeed.ui.main.jw_video_fragment
+package com.jwplayer.jwtiktak.fragment
 
 import androidx.lifecycle.ViewModel
-import com.jmilham.scrollingfeed.models.JwAdvertisement
-import com.jmilham.scrollingfeed.models.JwVideo
+import com.jwplayer.jwtiktak.data.JwAdvertisement
+import com.jwplayer.jwtiktak.data.JwVideo
 import com.jwplayer.pub.api.configuration.PlayerConfig
 import com.jwplayer.pub.api.configuration.UiConfig
 import com.jwplayer.pub.api.configuration.ads.ima.ImaAdvertisingConfig
