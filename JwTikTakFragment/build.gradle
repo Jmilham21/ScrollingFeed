@@ -20,7 +20,7 @@ afterEvaluate{
 }
 
 android {
-    namespace 'com.jwplayer.jwtiktak'
+    namespace 'com.jmilham21.scrllingfeed'
     compileSdk 33
 
     defaultConfig {
