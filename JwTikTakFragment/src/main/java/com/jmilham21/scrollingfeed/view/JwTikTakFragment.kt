@@ -1,4 +1,4 @@
-package com.jwplayer.jwtiktak.view
+package com.jmilham21.scrollingfeed.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.jwplayer.jwtiktak.R
-import com.jwplayer.jwtiktak.view.adapters.VideoFragmentAdapter
+import com.jmilham21.scrollingfeed.view.adapters.VideoFragmentAdapter
 
 class JwTikTakFragment(private val playlistId: String) : Fragment() {
 

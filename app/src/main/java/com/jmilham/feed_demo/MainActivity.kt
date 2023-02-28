@@ -1,4 +1,4 @@
-package com.jmilham.scrollingfeed
+package com.jmilham.feed_demo
 
 import android.os.Bundle
 import android.text.InputType
@@ -7,8 +7,10 @@ import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.jmilham.scrollingfeed.BuildConfig
+import com.jmilham.scrollingfeed.R
 import com.jmilham.scrollingfeed.databinding.MainActivityBinding
-import com.jwplayer.jwtiktak.view.JwTikTakFragment
+import com.jmilham21.scrollingfeed.view.JwTikTakFragment
 import com.jwplayer.pub.api.license.LicenseUtil
 
 
@@ -16,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     private val fragmentTag = "MainFragmentTag"
     private lateinit var binding: MainActivityBinding
-    private var tikTakFragment:JwTikTakFragment = JwTikTakFragment.newInstance("zAdW5unD")
+    private var tikTakFragment: JwTikTakFragment = JwTikTakFragment.newInstance("zAdW5unD")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

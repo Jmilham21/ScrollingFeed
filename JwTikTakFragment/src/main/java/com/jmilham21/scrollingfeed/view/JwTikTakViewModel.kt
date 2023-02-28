@@ -1,11 +1,11 @@
-package com.jwplayer.jwtiktak.view
+package com.jmilham21.scrollingfeed.view
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
-import com.jwplayer.jwtiktak.data.JwMedia
-import com.jwplayer.jwtiktak.data.JwVideo
+import com.jmilham21.scrollingfeed.data.JwMedia
+import com.jmilham21.scrollingfeed.data.JwVideo
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException

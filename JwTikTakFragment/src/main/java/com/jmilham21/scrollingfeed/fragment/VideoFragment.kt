@@ -1,4 +1,4 @@
-package com.jwplayer.jwtiktak.fragment
+package com.jmilham21.scrollingfeed.fragment
 
 import android.os.Bundle
 import android.os.Handler
@@ -11,12 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.jmilham21.scrollingfeed.data.JwAdvertisement
+import com.jmilham21.scrollingfeed.data.JwMedia
+import com.jmilham21.scrollingfeed.data.JwVideo
+import com.jmilham21.scrollingfeed.view.adapters.VideoFragmentAdapter
 import com.jwplayer.jwtiktak.R
-import com.jwplayer.jwtiktak.data.JwAdvertisement
-import com.jwplayer.jwtiktak.data.JwMedia
-import com.jwplayer.jwtiktak.data.JwVideo
 import com.jwplayer.jwtiktak.databinding.VideoPageBinding
-import com.jwplayer.jwtiktak.view.adapters.VideoFragmentAdapter
 import com.jwplayer.pub.api.JWPlayer
 import com.jwplayer.pub.api.PlayerState
 import com.jwplayer.pub.api.configuration.PlayerConfig
