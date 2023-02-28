@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.jmilham.scrollingfeed.BuildConfig
 import com.jmilham.scrollingfeed.R
 import com.jmilham.scrollingfeed.databinding.MainActivityBinding
 import com.jmilham21.scrollingfeed.view.JwTikTakFragment
@@ -26,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY)
+        LicenseUtil().setLicenseKey(this, "TODO")
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()

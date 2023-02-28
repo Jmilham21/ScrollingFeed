@@ -4,9 +4,9 @@ plugins {
     id 'kotlin-kapt'
 }
 
-def apikeyPropertiesFile = rootProject.file("apikey.properties")
-def apikeyProperties = new Properties()
-apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+//def apikeyPropertiesFile = rootProject.file("apikey.properties")
+//def apikeyProperties = new Properties()
+//apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
     compileSdk 33
@@ -18,8 +18,8 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "JWPLAYER_LICENSE_KEY", apikeyProperties['V2_LICENSE_KEY']
-        buildConfigField "String", "SITE_ID", apikeyProperties['SITE_ID']
+//        buildConfigField "String", "JWPLAYER_LICENSE_KEY", "TODO".toString()
+//        buildConfigField "String", "SITE_ID", "TODO".toString()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
