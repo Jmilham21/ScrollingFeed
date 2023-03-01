@@ -20,7 +20,7 @@ import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents
 import com.jwplayer.pub.view.JWPlayerView
 
 class JwTikTakFragment(
-    private val playlistId: String,
+    private val playlistId: String = "",
     private val config: TikTakUiConfig = TikTakUiConfig()
 ) : Fragment() {
 
@@ -29,7 +29,10 @@ class JwTikTakFragment(
     var validLicense = true
 
     companion object {
-        fun newInstance(playlistId: String) = JwTikTakFragment(playlistId)
+        fun newInstance(
+            playlistId: String = "",
+            config: TikTakUiConfig = TikTakUiConfig()
+        ) = JwTikTakFragment(playlistId, config)
     }
 
     private lateinit var viewModel: JwTikTakViewModel

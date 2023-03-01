@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -55,7 +56,7 @@ class VideoFragment(
 
         // setup
         if (jwMedia is JwVideo) {
-            loadThumbnail(jwMedia)
+            loadThumbnail(jwMedia, config)
             setupVideo()
         } else if (jwMedia is JwAdvertisement) {
             setupAdvertisement()
@@ -64,9 +65,33 @@ class VideoFragment(
         return binding.root
     }
 
-    private fun loadThumbnail(media: JwVideo) {
-        Picasso.get().load(media.image).fit().centerInside()
-            .into(binding.videoThumbnail)
+    private fun loadThumbnail(media: JwVideo, config: TikTakUiConfig) {
+        when (config.getStretching()) {
+            PlayerConfig.STRETCHING_FILL -> {
+                binding.videoThumbnail.scaleType = ImageView.ScaleType.CENTER_CROP
+                Picasso.get().load(media.image)
+                    .into(binding.videoThumbnail)
+            }
+            PlayerConfig.STRETCHING_UNIFORM -> {
+                binding.videoThumbnail.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                Picasso.get().load(media.image).fit().centerInside()
+                    .into(binding.videoThumbnail)
+            }
+            PlayerConfig.STRETCHING_EXACT_FIT -> {
+                binding.videoThumbnail.scaleType = ImageView.ScaleType.FIT_XY
+                Picasso.get().load(media.image).fit()
+                    .into(binding.videoThumbnail)
+            }
+            PlayerConfig.STRETCHING_NONE -> {
+                binding.videoThumbnail.scaleType = ImageView.ScaleType.CENTER
+                Picasso.get().load(media.image).fit().centerInside()
+                    .into(binding.videoThumbnail)
+            }
+            else -> {
+                Picasso.get().load(media.image)
+                    .into(binding.videoThumbnail)
+            }
+        }
     }
 
     override fun setMenuVisibility(menuVisible: Boolean) {
