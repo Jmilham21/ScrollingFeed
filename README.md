@@ -8,6 +8,7 @@ This application shows enhanced implementation of JW Player's Android SDK and De
 
 * A JW account with valid SDK license key.
 * A JW Playlist formatted with portrait content 
+* **!Not Required!** but very helpful if the thumbnail image is first frame of your video
 
 ## Getting Started - Demonstration
 The accompanying application is a super basic demonstration intended to showcase a simple implementation.
