@@ -6,9 +6,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.jmilham21.scrollingfeed.R
 import com.jmilham21.scrollingfeed.data.JwMedia
 import com.jmilham21.scrollingfeed.fragment.VideoFragment
+import com.jmilham21.scrollingfeed.view.configs.TikTakUiConfig
 
 
-class VideoFragmentAdapter(private val fragment: Fragment, var data: ArrayList<JwMedia>) :
+class VideoFragmentAdapter(
+    private val fragment: Fragment,
+    var data: ArrayList<JwMedia>,
+    private val config: TikTakUiConfig
+) :
     FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int {
@@ -21,8 +26,7 @@ class VideoFragmentAdapter(private val fragment: Fragment, var data: ArrayList<J
 
     override fun createFragment(position: Int): Fragment {
         // Return a NEW fragment instance in createFragment(int)
-        val fragment = VideoFragment(data[position], this, position)
-        return fragment
+        return VideoFragment(data[position], this, position, config)
     }
 
     /***

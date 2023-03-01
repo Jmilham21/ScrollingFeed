@@ -12,17 +12,20 @@ import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.jmilham21.scrollingfeed.R
 import com.jmilham21.scrollingfeed.view.adapters.VideoFragmentAdapter
+import com.jmilham21.scrollingfeed.view.configs.TikTakUiConfig
 import com.jwplayer.pub.api.configuration.PlayerConfig
 import com.jwplayer.pub.api.events.EventType
 import com.jwplayer.pub.api.events.SetupErrorEvent
 import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents
 import com.jwplayer.pub.view.JWPlayerView
 
-class JwTikTakFragment(private val playlistId: String) : Fragment() {
+class JwTikTakFragment(
+    private val playlistId: String,
+    private val config: TikTakUiConfig = TikTakUiConfig()
+) : Fragment() {
 
     private var errorMessage: String = ""
-    private var errorCode: Int= 0
-    private var offScreenLimit = 2
+    private var errorCode: Int = 0
     var validLicense = true
 
     companion object {
@@ -44,9 +47,8 @@ class JwTikTakFragment(private val playlistId: String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         pager = view.findViewById(R.id.pager)
-        pager?.offscreenPageLimit = offScreenLimit // this is a danger number if higher (and sometimes even at 1)
-        // BE CAUTIOUS OF ABOVE AND THE AMOUNT OF DECODERS THE DEVICE FOR THE MIME TYPE.
-        // there are two limitations for how large this should be: decoders and memory allocation
+        pager?.orientation = config.getOrientation()
+        pager?.offscreenPageLimit = config.getOffscreenLimit() // Be very aware of this number
         viewModel.liveVideos.observe(viewLifecycleOwner) {
             if (!validLicense) {
                 adapter?.data = ArrayList()
@@ -58,9 +60,7 @@ class JwTikTakFragment(private val playlistId: String) : Fragment() {
                 // bad playlistID or bad config
                 Toast.makeText(context, "PlaylistID invalid", Toast.LENGTH_LONG).show()
             } else {
-                // TODO: Refactor how to insert an ad type into the list
-//                it.add(it.size / 2, JwAdvertisement("https://playertest.longtailvideo.com/vast/preroll-jw.xml")) // add an ad to the middle for test
-                adapter = VideoFragmentAdapter(this, it)
+                adapter = VideoFragmentAdapter(this, it, config)
                 pager?.adapter = adapter
             }
         }
@@ -77,7 +77,7 @@ class JwTikTakFragment(private val playlistId: String) : Fragment() {
         val dummyPlayer = JWPlayerView(requireContext()).getPlayer(this)
         dummyPlayer.addListener(EventType.SETUP_ERROR, object : VideoPlayerEvents.OnSetupErrorListener {
             override fun onSetupError(p0: SetupErrorEvent) {
-                if(p0.code == 100012){
+                if (p0.code == 100012) {
                     // We have a bad license
                     viewModel.loadSomeVideoList("")
                     validLicense = false

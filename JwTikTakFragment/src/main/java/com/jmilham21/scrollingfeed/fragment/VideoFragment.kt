@@ -12,11 +12,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jmilham21.scrollingfeed.R
-import com.jmilham21.scrollingfeed.databinding.VideoPageBinding
 import com.jmilham21.scrollingfeed.data.JwAdvertisement
 import com.jmilham21.scrollingfeed.data.JwMedia
 import com.jmilham21.scrollingfeed.data.JwVideo
+import com.jmilham21.scrollingfeed.databinding.VideoPageBinding
 import com.jmilham21.scrollingfeed.view.adapters.VideoFragmentAdapter
+import com.jmilham21.scrollingfeed.view.configs.TikTakUiConfig
 import com.jwplayer.pub.api.JWPlayer
 import com.jwplayer.pub.api.PlayerState
 import com.jwplayer.pub.api.configuration.PlayerConfig
@@ -27,9 +28,10 @@ import com.squareup.picasso.Picasso
 
 
 class VideoFragment(
-    val jwMedia: JwMedia,
+    private val jwMedia: JwMedia,
     val videoFragmentAdapter: VideoFragmentAdapter,
-    val position: Int
+    val position: Int,
+    private val config: TikTakUiConfig
 ) : Fragment() {
 
     private lateinit var viewModel: VideoViewModel
@@ -115,18 +117,21 @@ class VideoFragment(
         val media = jwMedia as JwVideo
         jwPlayer = binding.jwplayer.getPlayer(this)
         setupListeners()
-        val config: PlayerConfig = viewModel.getPlayerConfig(jwMedia)
+        val config: PlayerConfig = viewModel.getPlayerConfig(jwMedia, config)
         jwPlayer?.setup(config)
         jwPlayer?.controls = false // fully disable the controls
         binding.textView.text = media.title
     }
 
+    /***
+     * TODO setup a player with no content and call .playAd()?
+     */
     private fun setupAdvertisement() {
         isAd = true
         val advertisement = jwMedia as JwAdvertisement
         jwPlayer = binding.jwplayer.getPlayer(this)
         setupListeners()
-        val playerConfig = viewModel.getPlayerAdvertConfig(advertisement)
+        val playerConfig = viewModel.getPlayerAdvertConfig(advertisement, config)
         jwPlayer?.setup(playerConfig)
         jwPlayer?.controls = false // fully disable the controls
     }
