@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_message">%1$s\n
+    JW Error Code: %2$d
+    </string>
+</resources>
