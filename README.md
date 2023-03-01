@@ -1,5 +1,5 @@
 # ScrollingFeed
-
+[![Release](https://jitpack.io/v/jmilham21/scrollingfeed.svg?style=flat-square)](https://jitpack.io/v/jmilham21/scrollingfeed)
 This application shows enhanced implementation of JW Player's Android SDK and Delivery API to create a seamless scrolling video content application.
 !JW Winter HackWeek 2023!
 
