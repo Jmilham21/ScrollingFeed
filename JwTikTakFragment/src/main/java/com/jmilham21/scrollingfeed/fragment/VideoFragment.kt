@@ -11,8 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.jmilham21.scrllingfeed.R
-import com.jmilham21.scrllingfeed.databinding.VideoPageBinding
+import com.jmilham21.scrollingfeed.R
+import com.jmilham21.scrollingfeed.databinding.VideoPageBinding
 import com.jmilham21.scrollingfeed.data.JwAdvertisement
 import com.jmilham21.scrollingfeed.data.JwMedia
 import com.jmilham21.scrollingfeed.data.JwVideo

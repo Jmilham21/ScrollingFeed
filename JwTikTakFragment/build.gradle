@@ -3,6 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'maven-publish'
 }
+
+// For testing locally
+// ./gradlew build publishToMavenLocal
 afterEvaluate{
     publishing {
         publications {
@@ -21,7 +24,7 @@ afterEvaluate{
 }
 
 android {
-    namespace 'com.jmilham21.scrllingfeed'
+    namespace 'com.jmilham21.scrollingfeed'
     compileSdk 33
 
     defaultConfig {

@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import com.jmilham21.scrllingfeed.R
+import com.jmilham21.scrollingfeed.R
 import com.jmilham21.scrollingfeed.view.adapters.VideoFragmentAdapter
 import com.jwplayer.pub.api.configuration.PlayerConfig
 import com.jwplayer.pub.api.events.EventType
