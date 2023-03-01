@@ -2,3 +2,7 @@ jdk:
   - openjdk11
 before_install:
   - ./scripts/prepareJitpackEnvironment.sh
+  - sdk install maven
+  - mvn -v
+install:
+  - mvn install -Dmaven.javadoc.skip=true -DskipTests
