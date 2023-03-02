@@ -33,8 +33,9 @@ class JwTikTakFragment(
     companion object {
         fun newInstance(
             playlistId: String = "",
-            config: TikTakUiConfig = TikTakUiConfig()
-        ) = JwTikTakFragment(playlistId, config)
+            config: TikTakUiConfig = TikTakUiConfig(),
+            middleware: JwMiddleware = JwMiddleware()
+        ) = JwTikTakFragment(playlistId, config, middleware)
     }
 
     private lateinit var viewModel: JwTikTakViewModel
