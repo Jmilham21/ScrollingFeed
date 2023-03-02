@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'maven-publish'
+    id 'org.jetbrains.dokka'
 }
 
 // For testing locally
@@ -21,6 +22,11 @@ afterEvaluate{
             }
         }
     }
+}
+
+task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    classifier = 'javadoc'
+    from "$buildDir/javadoc"
 }
 
 android {
