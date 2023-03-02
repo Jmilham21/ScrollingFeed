@@ -26,7 +26,7 @@ afterEvaluate{
 
 task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     classifier = 'javadoc'
-    from "$buildDir/javadoc"
+    from "$buildDir/dokka/javadoc"
 }
 
 android {
