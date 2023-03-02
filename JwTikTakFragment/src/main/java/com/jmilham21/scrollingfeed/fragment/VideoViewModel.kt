@@ -1,15 +1,19 @@
 package com.jmilham21.scrollingfeed.fragment
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.jmilham21.scrollingfeed.data.JwAdvertisement
 import com.jmilham21.scrollingfeed.data.JwVideo
+import com.jmilham21.scrollingfeed.middleware.JwMiddleware
 import com.jmilham21.scrollingfeed.view.configs.TikTakUiConfig
 import com.jwplayer.pub.api.configuration.PlayerConfig
 import com.jwplayer.pub.api.configuration.UiConfig
 import com.jwplayer.pub.api.configuration.ads.ima.ImaAdvertisingConfig
 import com.jwplayer.pub.api.media.ads.AdBreak
 
-class VideoViewModel : ViewModel() {
+class VideoViewModel(
+    private val middleware: JwMiddleware
+) : ViewModel(), ViewModelProvider.Factory {
     fun getPlayerConfig(media: JwVideo, config: TikTakUiConfig): PlayerConfig {
         val allDisabledUiConfig = UiConfig.Builder().hideAllControls().build()
         return PlayerConfig.Builder()
@@ -41,5 +45,9 @@ class VideoViewModel : ViewModel() {
             .advertisingConfig(imaAdvertising)
             .uiConfig(allDisabledUiConfig)
             .build()
+    }
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return VideoViewModel(middleware) as T
     }
 }

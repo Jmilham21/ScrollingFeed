@@ -17,6 +17,7 @@ import com.jmilham21.scrollingfeed.data.JwAdvertisement
 import com.jmilham21.scrollingfeed.data.JwMedia
 import com.jmilham21.scrollingfeed.data.JwVideo
 import com.jmilham21.scrollingfeed.databinding.VideoPageBinding
+import com.jmilham21.scrollingfeed.middleware.JwMiddleware
 import com.jmilham21.scrollingfeed.view.adapters.VideoFragmentAdapter
 import com.jmilham21.scrollingfeed.view.configs.TikTakUiConfig
 import com.jwplayer.pub.api.JWPlayer
@@ -32,7 +33,8 @@ class VideoFragment(
     private val jwMedia: JwMedia,
     val videoFragmentAdapter: VideoFragmentAdapter,
     val position: Int,
-    private val config: TikTakUiConfig
+    private val config: TikTakUiConfig,
+    private val middleware: JwMiddleware
 ) : Fragment() {
 
     private lateinit var viewModel: VideoViewModel
@@ -49,7 +51,7 @@ class VideoFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[VideoViewModel::class.java]
+        viewModel = ViewModelProvider(this, VideoViewModel(middleware))[VideoViewModel::class.java]
         binding = DataBindingUtil.inflate(
             inflater, R.layout.video_page, container, false
         )

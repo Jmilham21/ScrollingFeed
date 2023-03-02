@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.jmilham21.scrollingfeed.R
+import com.jmilham21.scrollingfeed.middleware.JwMiddleware
 import com.jmilham21.scrollingfeed.view.adapters.VideoFragmentAdapter
 import com.jmilham21.scrollingfeed.view.configs.TikTakUiConfig
 import com.jwplayer.pub.api.configuration.PlayerConfig
@@ -21,7 +22,8 @@ import com.jwplayer.pub.view.JWPlayerView
 
 class JwTikTakFragment(
     private val playlistId: String = "",
-    private val config: TikTakUiConfig = TikTakUiConfig()
+    private val config: TikTakUiConfig = TikTakUiConfig(),
+    private val middleware: JwMiddleware = JwMiddleware()
 ) : Fragment() {
 
     private var errorMessage: String = ""
@@ -63,7 +65,7 @@ class JwTikTakFragment(
                 // bad playlistID or bad config
                 Toast.makeText(context, "PlaylistID invalid", Toast.LENGTH_LONG).show()
             } else {
-                adapter = VideoFragmentAdapter(this, it, config)
+                adapter = VideoFragmentAdapter(this, it, config, middleware)
                 pager?.adapter = adapter
             }
         }
