@@ -14,8 +14,8 @@ afterEvaluate{
                 from components.release
                 groupId = 'com.jmilham21'
                 artifactId = 'ScrollingFeed'
-                version = "1.0.0"
-
+                version = "1.2.0"
+                artifact javadocJar
                 pom {
                     description = 'A description of my library'
                 }
