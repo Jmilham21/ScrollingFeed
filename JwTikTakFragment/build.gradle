@@ -24,9 +24,9 @@ afterEvaluate{
     }
 }
 
-task javadocJar(type: Jar, dependsOn: dokkaHtml) {
+task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     classifier = 'javadoc'
-    from "$buildDir/dokka/html"
+    from "$buildDir/dokka/javadoc"
 }
 
 android {
