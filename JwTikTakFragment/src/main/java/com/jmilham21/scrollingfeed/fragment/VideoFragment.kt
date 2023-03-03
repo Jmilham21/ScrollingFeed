@@ -28,7 +28,15 @@ import com.jwplayer.pub.api.events.listeners.AdvertisingEvents
 import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents.*
 import com.squareup.picasso.Picasso
 
-
+/**
+ * Main fragment that populates [com.jmilham21.scrollingfeed.view.adapters.VideoFragmentAdapter]
+ *
+ * @property jwMedia JW media ID that is used to get platform thumbnails and stream
+ * @property videoFragmentAdapter Adapter used by main Fragment, used as a go-between
+ * @property position Position of the Fragment in the adapter
+ * @property config Internal [com.jmilham21.scrollingfeed.view.configs.TikTakUiConfig] to define how the Fragment lays out
+ * @property middleware TODO implement me to allow JW mAPI logic outside of app
+ */
 class VideoFragment(
     private val jwMedia: JwMedia,
     val videoFragmentAdapter: VideoFragmentAdapter,
@@ -37,7 +45,7 @@ class VideoFragment(
     private val middleware: JwMiddleware
 ) : Fragment() {
 
-    private lateinit var viewModel: VideoViewModel
+        private lateinit var viewModel: VideoViewModel
     private lateinit var binding: VideoPageBinding
 
 

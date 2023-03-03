@@ -23,6 +23,14 @@ afterEvaluate{
         }
     }
 }
+dokkaJavadoc.configure {
+    dokkaSourceSets {
+        named("main") {
+            skipDeprecated.set(true)
+            separateInheritedMembers.set(true)
+        }
+    }
+}
 
 task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     classifier = 'javadoc'
