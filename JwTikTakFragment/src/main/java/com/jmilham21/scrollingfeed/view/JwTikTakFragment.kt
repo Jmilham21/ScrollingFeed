@@ -31,6 +31,7 @@ class JwTikTakFragment(
     var validLicense = true
 
     companion object {
+        @JvmStatic
         fun newInstance(
             playlistId: String = "",
             config: TikTakUiConfig = TikTakUiConfig(),
